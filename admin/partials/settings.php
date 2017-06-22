@@ -13,18 +13,20 @@
  */
 
 $settings = wp_parse_args( get_option( $this->plugin_name, array() ), array(
-	'page' => ''
+	'page' => '',
+	'login_message' => 'Please login to start chatting.',
 ) );
+
 ?>
 
-<h2>Shramee's chat settings</h2>
+<h2><?php _e( "Shramee's chat settings", $this->plugin_name ) ?></h2>
 <form method="POST" action="options.php">
 	<table class="form-table">
 		<tr>
-			<th scope="row">Show on page</th>
+			<th scope="row"><?php _e( "Show on page", $this->plugin_name ) ?></th>
 			<td>
 				<select name='<?php echo $this->plugin_name ?>[page]' id='<?php echo $this->plugin_name ?>'>
-					<option value="">Please choose...</option>
+					<option value=""><?php _e( "Please choose...", $this->plugin_name ) ?></option>
 					<?php
 
 					$pages = get_pages();
@@ -35,6 +37,12 @@ $settings = wp_parse_args( get_option( $this->plugin_name, array() ), array(
 
 					?>
 				</select>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><?php _e( "User not logged in message", $this->plugin_name ) ?></th>
+			<td>
+				<textarea cols="50" rows="3" name="<?php echo $this->plugin_name ?>[login_message]"><?php echo $settings['login_message'] ?></textarea>
 			</td>
 		</tr>
 	</table>
