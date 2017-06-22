@@ -30,9 +30,6 @@
 class Sm_Chat {
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
-	 *
 	 * @since    1.0.0
 	 * @access   protected
 	 * @var      Sm_Chat_Loader    $loader    Maintains and registers all hooks for the plugin.
@@ -40,8 +37,6 @@ class Sm_Chat {
 	protected $loader;
 
 	/**
-	 * The unique identifier of this plugin.
-	 *
 	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
@@ -49,13 +44,18 @@ class Sm_Chat {
 	protected $plugin_name;
 
 	/**
-	 * The current version of the plugin.
-	 *
 	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
+
+	/**
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var     string     $plugin_basename    Plugin basename
+	 */
+	protected $plugin_basename;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -70,6 +70,7 @@ class Sm_Chat {
 
 		$this->plugin_name = 'sm-chat';
 		$this->version = '1.0.0';
+		$this->plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -151,8 +152,10 @@ class Sm_Chat {
 
 		$plugin_admin = new Sm_Chat_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'admin_init' );
+		$this->loader->add_action( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_action_links' );
 
 	}
 
@@ -167,8 +170,7 @@ class Sm_Chat {
 
 		$plugin_public = new Sm_Chat_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue' );
 
 	}
 
