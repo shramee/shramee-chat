@@ -2,3 +2,20 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+#sm-chat-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: stretch; }
+  #sm-chat-wrap aside {
+    order: 0;
+    flex: 0 1 250px;
+    align-self: auto; }
+  #sm-chat-wrap section {
+    order: 0;
+    flex: 1 1 auto;
+    align-self: auto; }
+
+/*# sourceMappingURL=sm-chat-public.css.map */

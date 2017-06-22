@@ -41,6 +41,13 @@ class Sm_Chat_Public {
 	private $version;
 
 	/**
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $settings    Plugin settings.
+	 */
+	private $settings;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -55,47 +62,60 @@ class Sm_Chat_Public {
 	}
 
 	/**
-	 * Register the stylesheets for the public-facing side of the site.
+	 * Checks if it is chat page, initiates chat UI if it is.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function init() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Sm_Chat_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Sm_Chat_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		$this->settings = wp_parse_args( get_option( $this->plugin_name, array() ), array(
+			'page' => '',
+			'login_message' => 'Please login to start chatting.',
+		) );
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sm-chat-public.css', array(), $this->version, 'all' );
+		if ( ! empty( $this->settings['page'] ) && is_page( $this->settings['page'] ) ) {
+
+			add_filter( 'the_content', array( $this, 'render_chat' ) );
+
+			add_filter( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+
+		}
 
 	}
 
 	/**
-	 * Register the JavaScript for the public-facing side of the site.
+	 * Renders chat UI HTML
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function render_chat( $content ) {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Sm_Chat_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Sm_Chat_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		ob_start();
 
+		if ( is_user_logged_in() ) {
+			include 'partials/chat.php';
+		} else {
+			echo $this->settings['login_message'];
+		}
+
+		$chat_ui = ob_get_clean();
+
+		return $chat_ui;
+
+	}
+
+	/**
+	 * Register the stylesheets for the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue() {
+
+		// Styles
+		wp_enqueue_style( 'font-awesome', plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css', array(), $this->version );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/sm-chat-public.css', array(), $this->version );
+
+		// Scripts
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sm-chat-public.js', array( 'jquery' ), $this->version, false );
 
 	}

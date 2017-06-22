@@ -13,4 +13,11 @@
  */
 ?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<div id="sm-chat">
+	<aside>
+
+	</aside>
+	<section>
+
+	</section>
+</div>
