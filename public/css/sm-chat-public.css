@@ -2,20 +2,122 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-#sm-chat-wrap {
+.flex {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-content: stretch;
   align-items: stretch; }
-  #sm-chat-wrap aside {
+  .flex.stretch > * {
+    flex: 1 1 auto; }
+
+#sm-chat {
+  border: 1px solid #aaa;
+  height: 100vh;
+  font: 16px/1.6 sans-serif; }
+  #sm-chat h3 {
+    text-transform: uppercase;
+    color: #888;
+    text-align: center;
+    margin: 0.5em 0; }
+  #sm-chat input {
+    font: 16px/35px sans-serif;
+    padding: 0 16px;
+    background: #ffffff;
+    color: #444;
+    border: 1px solid #aaa;
+    border-radius: 0; }
+    #sm-chat input[type='button'] {
+      color: #ffffff;
+      border: 0;
+      background: #444; }
+  #sm-chat img.user-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    border: 1px solid #999; }
+  #sm-chat > * > * {
+    padding: 8px; }
+  #sm-chat > * > header {
+    flex: 0 0 54px;
+    font: 20px/35px sans-serif;
+    border-bottom: 1px solid #aaa; }
+  #sm-chat aside {
     order: 0;
-    flex: 0 1 250px;
-    align-self: auto; }
-  #sm-chat-wrap section {
+    flex: 0 0 300px; }
+    #sm-chat aside header {
+      text-align: center;
+      font-size: 0; }
+      #sm-chat aside header a {
+        font-size: 20px;
+        padding: 0 12px;
+        margin: 0;
+        border: 1px solid #04a;
+        color: #07c;
+        background: #fff;
+        display: inline-block; }
+        #sm-chat aside header a.active {
+          margin: 0 -1px;
+          color: #fff;
+          background: #07c; }
+    #sm-chat aside .users, #sm-chat aside .users li, #sm-chat aside .chats, #sm-chat aside .chats li {
+      display: block;
+      margin: 0;
+      padding: 0; }
+    #sm-chat aside .users li, #sm-chat aside .chats li {
+      cursor: pointer;
+      padding: 8px;
+      margin-bottom: 8px; }
+      #sm-chat aside .users li:hover, #sm-chat aside .chats li:hover {
+        background: #eee; }
+      #sm-chat aside .users li.active, #sm-chat aside .chats li.active {
+        background: #07c;
+        color: #fff; }
+        #sm-chat aside .users li.active:hover, #sm-chat aside .chats li.active:hover {
+          background: #07c; }
+  #sm-chat main {
+    border-left: 1px solid #aaa;
     order: 0;
-    flex: 1 1 auto;
-    align-self: auto; }
+    flex-direction: column; }
+    #sm-chat main .message {
+      margin-bottom: 1em; }
+      #sm-chat main .message:after {
+        display: block;
+        clear: both; }
+      #sm-chat main .message .user img {
+        float: left; }
+      #sm-chat main .message .user .name {
+        font-weight: bold; }
+    #sm-chat main section {
+      flex: 1 1 auto;
+      overflow: auto; }
+    #sm-chat main footer {
+      flex: 0 0 50px;
+      padding: 0 5px 5px; }
+      #sm-chat main footer [type='button'] {
+        flex: 0 1 100px; }
+
+@keyframes loader-anim {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+.loader {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  animation: loader-anim 1s linear infinite;
+  border-radius: 999px;
+  border: 25px solid #07c;
+  border-bottom-color: transparent;
+  margin: 25px auto; }
+  .loader + h2 {
+    margin: 25px;
+    text-align: center;
+    color: #04a; }
 
 /*# sourceMappingURL=sm-chat-public.css.map */

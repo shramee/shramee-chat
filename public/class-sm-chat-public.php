@@ -43,9 +43,30 @@ class Sm_Chat_Public {
 	/**
 	 * @since    1.0.0
 	 * @access   private
+	 * @var      string    $loader    Loader HTML localized
+	 */
+	private $loader;
+
+	/**
+	 * @since    1.0.0
+	 * @access   private
 	 * @var      array    $settings    Plugin settings.
 	 */
 	private $settings;
+
+	/**
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $user   Current user
+	 */
+	private $user = array();
+
+	/**
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $users  All site users
+	 */
+	private $users = array();
 
 	/**
 	 * Initialize the class and set its properties.
@@ -59,6 +80,12 @@ class Sm_Chat_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+	}
+
+	public function __get( $name ) {
+		if ( strpos( $name, 'user' ) && isset( $this->$name ) ) {
+			return $this->$name;
+		}
 	}
 
 	/**
@@ -117,6 +144,35 @@ class Sm_Chat_Public {
 
 		// Scripts
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/sm-chat-public.js', array( 'jquery' ), $this->version, false );
+
+		// Current user
+		$usr = wp_get_current_user();
+		$this->user = array(
+			'id' => $usr->ID,
+			'name' => $usr->display_name,
+			'avatar' => get_avatar_url( $usr->ID, 96 ),
+		);
+
+		// All blog users
+		$users = get_users( 'blog_id=1' );
+		foreach ( $users as $usr ) {
+			$this->users[ $usr->ID ] = array(
+				'id' => $usr->ID,
+				'name' => $usr->display_name,
+				'avatar' => get_avatar_url( $usr->ID, 96 ),
+			);
+		}
+
+		// Loader ( Localized )
+		$this->loader = '<div class="loader"></div><h2>' . __( 'Loading...', $this->plugin_name ) . '</h2>';
+
+		// Localize
+		wp_localize_script( $this->plugin_name, 'smChatData', array(
+			'users' => $this->users,
+			'user' => $this->user,
+			'loader' => $this->loader,
+			'url' => admin_url( 'admin-ajax.php' ),
+		) );
 
 	}
 

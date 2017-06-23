@@ -31,6 +31,13 @@ class Sm_Chat {
 
 	/**
 	 * @since    1.0.0
+	 * @access   public
+	 * @var      Sm_Chat_Messages    $msg    Messages handler
+	 */
+	public static $msg;
+
+	/**
+	 * @since    1.0.0
 	 * @access   protected
 	 * @var      Sm_Chat_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
@@ -70,7 +77,7 @@ class Sm_Chat {
 
 		$this->plugin_name = 'sm-chat';
 		$this->version = '1.0.0';
-		$this->plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
+		$this->plugin_basename = plugin_basename( __DIR__ . $this->plugin_name . '.php' );
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -101,24 +108,31 @@ class Sm_Chat {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sm-chat-loader.php';
+		require_once dirname( __FILE__ ) . '/class-sm-chat-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sm-chat-i18n.php';
+		require_once dirname( __FILE__ ) . '/class-sm-chat-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sm-chat-admin.php';
+		require_once dirname( __FILE__ ) . '/../admin/class-sm-chat-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-sm-chat-public.php';
+		require_once dirname( __FILE__ ) . '/../public/class-sm-chat-public.php';
+
+		/**
+		 * Chat messages handler
+		 */
+		require_once dirname( __FILE__ ) . '/class-messages.php';
+
+		self::$msg = new Sm_Chat_Messages();
 
 		$this->loader = new Sm_Chat_Loader();
 
@@ -156,7 +170,8 @@ class Sm_Chat {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'admin_init' );
 		$this->loader->add_action( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_action_links' );
-
+		$this->loader->add_action( 'wp_ajax_sm_chat_get', $plugin_admin, 'handle_get_messages' );
+		$this->loader->add_action( 'wp_ajax_sm_chat_add', $plugin_admin, 'handle_add_message' );
 	}
 
 	/**
