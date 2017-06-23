@@ -13,7 +13,7 @@
  * @package           Sm_Chat
  *
  * @wordpress-plugin
- * Plugin Name:       Shramee's chatting platform
+ * Plugin Name:       Shramee's chat
  * Plugin URI:        http://shramee.me/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0

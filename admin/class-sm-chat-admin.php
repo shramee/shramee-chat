@@ -52,6 +52,7 @@ class Sm_Chat_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$this->msg = Sm_Chat::$msg;
 	}
 
 	/**
@@ -118,4 +119,56 @@ class Sm_Chat_Admin {
 
 	}
 
+	/**
+	 * Handles get messages AJAX calls
+	 *
+	 * @since 1.0.0
+	 */
+	public function handle_get_messages() {
+		$uid1 = filter_input( INPUT_POST, 'uid1' );
+		$uid2 = filter_input( INPUT_POST, 'uid2' );
+
+		if ( is_numeric( $uid1 ) && is_numeric( $uid2 ) ) {
+			$response = array(
+				'success'  => true,
+				'messages' => $this->msg->get_messages( $uid1, $uid2 ),
+			);
+		} else {
+			$response = array(
+				'success'  => false,
+				'msg' => 'User IDs of both users should be numeric',
+			);
+		}
+
+		die( json_encode( $response ) );
+	}
+
+	/**
+	 * Handles add message AJAX calls
+	 *
+	 * @since 1.0.0
+	 */
+	public function handle_add_message() {
+		$sender = filter_input( INPUT_POST, 'sender' );
+		$recipient = filter_input( INPUT_POST, 'recipient' );
+		$msg = filter_input( INPUT_POST, 'msg' );
+
+		if ( ! is_numeric( $sender ) || ! is_numeric( $recipient ) ) {
+			$response = array(
+				'success'  => false,
+				'msg' => 'User IDs of both sender and recipient should be numeric',
+			);
+		} else if ( empty( $msg ) ) {
+			$response = array(
+				'success'  => false,
+				'msg' => 'Message not found.',
+			);
+		} else {
+			$response = array(
+				'success'  => $this->msg->add_message( $sender, $recipient, $msg ),
+			);
+		}
+
+		die( json_encode( $response ) );
+	}
 }
